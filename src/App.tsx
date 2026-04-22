@@ -66,14 +66,28 @@ export default function App() {
     );
   }
 
+  function handleCreateNote() {
+    const nextId = Math.max(...notes.map((note) => note.id), 0) + 1;
+    const newNote: Note = {
+      id: nextId,
+      title: "Untitled Note",
+      content: "",
+    };
+    setNotes([newNote, ...notes]);
+    setActiveNoteId(newNote.id);
+  }
+
   const previewHtml = marked(activeNote?.content || "");
 
   return (
     <div className="app-layout">
       <aside className="sidebar">
         <h2 className="section-title">Notes</h2>
-
         <div className="notes-list">
+          <button className="new-note-button" onClick={handleCreateNote}>
+            + New Note
+          </button>
+
           {notes.map((note) => {
             const isActive = note.id === activeNoteId;
 
@@ -84,7 +98,9 @@ export default function App() {
                 onClick={() => setActiveNoteId(note.id)}
               >
                 <h3 className="note-title">{note.title}</h3>
-                <p className="note-excerpt">{note.content}</p>
+                <p className="note-excerpt">
+                  {note.content || "No content yet."}
+                </p>
               </article>
             );
           })}
