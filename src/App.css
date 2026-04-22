@@ -148,6 +148,13 @@ body {
   color: #666;
   text-align: center;
 }
+
+.note-date {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #666;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -158,9 +165,4 @@ body {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
-}
-.note-date {
-  margin-top: 12px;
-  font-size: 14px;
-  color: #666;
 }
