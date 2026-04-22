@@ -150,13 +150,21 @@ export default function App() {
           >
             Delete
           </button>
+          <label className="visually-hidden" htmlFor="note-title">
+            Note title
+          </label>
           <input
+            id="note-title"
             className="note-input"
             type="text"
             value={activeNote?.title || ""}
             onChange={handleTitleChange}
           />
+          <label className="visually-hidden" htmlFor="note-content">
+            Note content
+          </label>
           <textarea
+            id="note-content"
             className="note-textarea"
             value={activeNote?.content || ""}
             onChange={handleContenChange}
