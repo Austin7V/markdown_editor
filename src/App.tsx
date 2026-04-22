@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import { marked } from "marked";
 
 type Note = {
   id: number;
@@ -11,17 +12,18 @@ const notes: Note[] = [
   {
     id: 1,
     title: "React Basics",
-    content: "Learn components, props, and state management",
+    content: "# React Basics\n\nLearn components, props, and state management.",
   },
   {
     id: 2,
     title: "TypeScript Notes",
-    content: "Understand types, interfaces and type safety",
+    content:
+      "## TypeScript Notes\n\nUnderstand **types**, interfaces, and type safety.",
   },
   {
     id: 3,
     title: "Markdown Ideas",
-    content: "Test headings, lists and formatted preview content",
+    content: "### Markdown Ideas\n\n- headings\n- lists\n- preview content",
   },
 ];
 
@@ -63,6 +65,8 @@ export default function App() {
       }),
     );
   }
+
+  const previewHtml = marked(activeNote?.content || "");
 
   return (
     <div className="app-layout">
@@ -106,10 +110,10 @@ export default function App() {
 
       <section className="preview">
         <h2 className="section-title">Preview</h2>
-        <div className="section-box">
-          <h3 className="content-title">{activeNote?.title}</h3>
-          <p>{activeNote?.content}</p>
-        </div>
+        <div
+          className="section-box preview-content"
+          dangerouslySetInnerHTML={{ __html: previewHtml }}
+        />
       </section>
     </div>
   );
