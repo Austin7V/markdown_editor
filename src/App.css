@@ -41,3 +41,27 @@ body {
   border-radius: 8px;
   background-color: #f8f8f8;
 }
+
+.notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.note-card {
+  padding: 12px;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  background-color: #f8f8f8;
+}
+
+.note-title {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.note-excerpt {
+  margin: 0;
+  font-size: 14px;
+  color: #444;
+}
