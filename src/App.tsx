@@ -2,10 +2,12 @@ import { useState } from "react";
 import "./App.css";
 import { marked } from "marked";
 
-type Note = {
+export type Note = {
   id: number;
   title: string;
   content: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 const notes: Note[] = [
@@ -13,17 +15,23 @@ const notes: Note[] = [
     id: 1,
     title: "React Basics",
     content: "# React Basics\n\nLearn components, props, and state management.",
+    createdAt: "2026-04-22T10:00:00.000Z",
+    updatedAt: "2026-04-22T10:00:00.000Z",
   },
   {
     id: 2,
     title: "TypeScript Notes",
     content:
       "## TypeScript Notes\n\nUnderstand **types**, interfaces, and type safety.",
+    createdAt: "2026-04-22T10:00:00.000Z",
+    updatedAt: "2026-04-22T10:00:00.000Z",
   },
   {
     id: 3,
     title: "Markdown Ideas",
     content: "### Markdown Ideas\n\n- headings\n- lists\n- preview content",
+    createdAt: "2026-04-22T10:00:00.000Z",
+    updatedAt: "2026-04-22T10:00:00.000Z",
   },
 ];
 
@@ -70,10 +78,13 @@ export default function App() {
 
   function handleCreateNote() {
     const nextId = Math.max(...notes.map((note) => note.id), 0) + 1;
+    const currentDate = new Date().toISOString();
     const newNote: Note = {
       id: nextId,
       title: "Untitled Note",
       content: "",
+      createdAt: currentDate,
+      updatedAt: currentDate,
     };
     setNotes([newNote, ...notes]);
     setActiveNoteId(newNote.id);
@@ -105,18 +116,26 @@ export default function App() {
   return (
     <div className="app-layout">
       <aside className="sidebar">
-        <h2 className="section-title">Notes</h2>
-        <div className="notes-list">
+        <div className="sidebar-header">
+          <h2 className="section-title">Notes</h2>
           <button className="new-note-button" onClick={handleCreateNote}>
             + New Note
           </button>
-          <input
-            className="search-input"
-            type="text"
-            placeholder="Search notes..."
-            value={searchTerm}
-            onChange={(event) => setSearchTerm(event.target.value)}
-          />
+        </div>
+
+        <label className="visually-hidden" htmlFor="search-notes">
+          Search notes
+        </label>
+        <input
+          id="search-notes"
+          className="search-input"
+          type="text"
+          placeholder="Search notes..."
+          value={searchTerm}
+          onChange={(event) => setSearchTerm(event.target.value)}
+        />
+
+        <div className="notes-list">
           {filteredNotes.length > 0 ? (
             filteredNotes.map((note) => {
               const isActive = note.id === activeNoteId;
@@ -141,8 +160,8 @@ export default function App() {
       </aside>
 
       <main className="editor">
-        <h2 className="section-title">Editor</h2>
-        <div className="section-box">
+        <div className="editor-header">
+          <h2 className="section-title">Editor</h2>
           <button
             className="delete-note-button"
             onClick={handleDeleteNote}
@@ -150,25 +169,39 @@ export default function App() {
           >
             Delete
           </button>
-          <label className="visually-hidden" htmlFor="note-title">
-            Note title
-          </label>
-          <input
-            id="note-title"
-            className="note-input"
-            type="text"
-            value={activeNote?.title || ""}
-            onChange={handleTitleChange}
-          />
-          <label className="visually-hidden" htmlFor="note-content">
-            Note content
-          </label>
-          <textarea
-            id="note-content"
-            className="note-textarea"
-            value={activeNote?.content || ""}
-            onChange={handleContenChange}
-          />
+        </div>
+
+        <div className="section-box">
+          {activeNote ? (
+            <>
+              <label className="visually-hidden" htmlFor="note-title">
+                Note title
+              </label>
+              <input
+                id="note-title"
+                className="note-input"
+                type="text"
+                value={activeNote.title}
+                onChange={handleTitleChange}
+              />
+
+              <label className="visually-hidden" htmlFor="note-content">
+                Note content
+              </label>
+              <textarea
+                id="note-content"
+                className="note-textarea"
+                value={activeNote.content}
+                onChange={handleContenChange}
+              />
+
+              <p className="note-date">
+                Last updated: {new Date(activeNote.updatedAt).toLocaleString()}
+              </p>
+            </>
+          ) : (
+            <p>No note selected.</p>
+          )}
         </div>
       </main>
 
