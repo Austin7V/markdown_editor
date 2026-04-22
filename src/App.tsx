@@ -26,9 +26,43 @@ const notes: Note[] = [
 ];
 
 export default function App() {
+  const [readyNotes, setNotes] = useState(notes);
   const [activeNoteId, setActiveNoteId] = useState(notes[0].id);
 
   const activeNote = notes.find((note) => note.id === activeNoteId);
+
+  function handleTitleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const newTitle = event.target.value;
+
+    setNotes(
+      readyNotes.map((note) => {
+        if (note.id === activeNoteId) {
+          return {
+            ...note,
+            title: newTitle,
+          };
+        }
+
+        return note;
+      }),
+    );
+  }
+
+  function handleContenChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+    const newContent = event.target.value;
+
+    setNotes(
+      readyNotes.map((note) => {
+        if (note.id === activeNoteId) {
+          return {
+            ...note,
+            content: newContent,
+          };
+        }
+        return note;
+      }),
+    );
+  }
 
   return (
     <div className="app-layout">
@@ -56,8 +90,17 @@ export default function App() {
       <main className="editor">
         <h2 className="section-title">Editor</h2>
         <div className="section-box">
-          <h3 className="content-title">{activeNote?.title}</h3>
-          <p>{activeNote?.content}</p>
+          <input
+            className="note-input"
+            type="text"
+            value={activeNote?.title || ""}
+            onChange={handleTitleChange}
+          />
+          <textarea
+            className="note-textarea"
+            value={activeNote?.content || ""}
+            onChange={handleContenChange}
+          />
         </div>
       </main>
 
