@@ -38,10 +38,6 @@ export default function App() {
             </article>
           ))}
         </div>
-
-        <div className="section-box">
-          <p>Notes list will appear here.</p>
-        </div>
       </aside>
 
       <main className="editor">
