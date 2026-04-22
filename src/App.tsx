@@ -3,7 +3,7 @@ import { marked } from "marked";
 import "./App.css";
 import type { Note } from "./types";
 
-const notes: Note[] = [
+const initialNotes: Note[] = [
   {
     id: 1,
     title: "React Basics",
@@ -29,9 +29,10 @@ const notes: Note[] = [
 ];
 
 export default function App() {
-  const [readyNotes, setNotes] = useState(notes);
-  const [activeNoteId, setActiveNoteId] = useState<number | null>(notes[0].id);
-
+  const [notes, setNotes] = useState<Note[]>(initialNotes);
+  const [activeNoteId, setActiveNoteId] = useState<number | null>(
+    initialNotes[0].id,
+  );
   const [searchTerm, setSearchTerm] = useState("");
 
   const activeNote = notes.find((note) => note.id === activeNoteId);
@@ -41,7 +42,7 @@ export default function App() {
     const currentDate = new Date().toISOString();
 
     setNotes(
-      readyNotes.map((note) => {
+      notes.map((note) => {
         if (note.id === activeNoteId) {
           return {
             ...note,
@@ -55,12 +56,12 @@ export default function App() {
     );
   }
 
-  function handleContenChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+  function handleContentChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
     const newContent = event.target.value;
     const currentDate = new Date().toISOString();
 
     setNotes(
-      readyNotes.map((note) => {
+      notes.map((note) => {
         if (note.id === activeNoteId) {
           return {
             ...note,
@@ -93,7 +94,7 @@ export default function App() {
     if (activeNoteId === null) {
       return;
     }
-    const updatedNotes = notes.filter((note) => note.id! === activeNoteId);
+    const updatedNotes = notes.filter((note) => note.id !== activeNoteId);
     setNotes(updatedNotes);
     if (updatedNotes.length > 0) {
       setActiveNoteId(updatedNotes[0].id);
@@ -203,7 +204,7 @@ export default function App() {
                 id="note-content"
                 className="note-textarea"
                 value={activeNote.content}
-                onChange={handleContenChange}
+                onChange={handleContentChange}
               />
 
               <p className="note-date">
