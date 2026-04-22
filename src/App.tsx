@@ -1,14 +1,7 @@
 import { useState } from "react";
-import "./App.css";
 import { marked } from "marked";
-
-export type Note = {
-  id: number;
-  title: string;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-};
+import "./App.css";
+import type { Note } from "./types";
 
 const notes: Note[] = [
   {
@@ -45,6 +38,7 @@ export default function App() {
 
   function handleTitleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const newTitle = event.target.value;
+    const currentDate = new Date().toISOString();
 
     setNotes(
       readyNotes.map((note) => {
@@ -52,6 +46,7 @@ export default function App() {
           return {
             ...note,
             title: newTitle,
+            updatedAt: currentDate,
           };
         }
 
@@ -62,6 +57,7 @@ export default function App() {
 
   function handleContenChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
     const newContent = event.target.value;
+    const currentDate = new Date().toISOString();
 
     setNotes(
       readyNotes.map((note) => {
@@ -69,8 +65,10 @@ export default function App() {
           return {
             ...note,
             content: newContent,
+            updatedAt: currentDate,
           };
         }
+
         return note;
       }),
     );
@@ -88,6 +86,7 @@ export default function App() {
     };
     setNotes([newNote, ...notes]);
     setActiveNoteId(newNote.id);
+    setSearchTerm("");
   }
 
   function handleDeleteNote() {
@@ -112,6 +111,10 @@ export default function App() {
   });
 
   const previewHtml = marked(activeNote?.content || "");
+  const hasNoNotes = notes.length === 0;
+  const hasNoSearchResults =
+    filteredNotes.length === 0 && searchTerm.trim() !== "";
+  const hasNoSelectedNote = !activeNote && notes.length > 0;
 
   return (
     <div className="app-layout">
@@ -136,7 +139,13 @@ export default function App() {
         />
 
         <div className="notes-list">
-          {filteredNotes.length > 0 ? (
+          {hasNoNotes ? (
+            <div className="empty-message">
+              No notes yet. Create your first note.
+            </div>
+          ) : hasNoSearchResults ? (
+            <div className="empty-message">No notes match your search.</div>
+          ) : (
             filteredNotes.map((note) => {
               const isActive = note.id === activeNoteId;
 
@@ -153,8 +162,6 @@ export default function App() {
                 </article>
               );
             })
-          ) : (
-            <div className="empty-message">No notes match your search.</div>
           )}
         </div>
       </aside>
@@ -172,7 +179,11 @@ export default function App() {
         </div>
 
         <div className="section-box">
-          {activeNote ? (
+          {hasNoNotes ? (
+            <p>No notes available. Create a new note to start editing.</p>
+          ) : hasNoSelectedNote ? (
+            <p>No note selected.</p>
+          ) : activeNote ? (
             <>
               <label className="visually-hidden" htmlFor="note-title">
                 Note title
@@ -199,18 +210,21 @@ export default function App() {
                 Last updated: {new Date(activeNote.updatedAt).toLocaleString()}
               </p>
             </>
-          ) : (
-            <p>No note selected.</p>
-          )}
+          ) : null}
         </div>
       </main>
 
       <section className="preview">
         <h2 className="section-title">Preview</h2>
-        <div
-          className="section-box preview-content"
-          dangerouslySetInnerHTML={{ __html: previewHtml }}
-        />
+        <div className="section-box preview-content">
+          {hasNoNotes ? (
+            <p>No preview available because no notes exist yet.</p>
+          ) : hasNoSelectedNote ? (
+            <p>No preview available.</p>
+          ) : activeNote ? (
+            <div dangerouslySetInnerHTML={{ __html: previewHtml }} />
+          ) : null}
+        </div>
       </section>
     </div>
   );
