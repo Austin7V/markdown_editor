@@ -83,11 +83,11 @@ export default function App() {
     <div className="app-layout">
       <aside className="sidebar">
         <h2 className="section-title">Notes</h2>
-        <button className="new-note-button" onClick={handleCreateNote}>
-          + New Note
-        </button>
-
         <div className="notes-list">
+          <button className="new-note-button" onClick={handleCreateNote}>
+            + New Note
+          </button>
+
           {notes.map((note) => {
             const isActive = note.id === activeNoteId;
 
