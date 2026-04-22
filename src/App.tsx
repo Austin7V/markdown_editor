@@ -31,6 +31,8 @@ export default function App() {
   const [readyNotes, setNotes] = useState(notes);
   const [activeNoteId, setActiveNoteId] = useState<number | null>(notes[0].id);
 
+  const [searchTerm, setSearchTerm] = useState("");
+
   const activeNote = notes.find((note) => note.id === activeNoteId);
 
   function handleTitleChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -89,6 +91,15 @@ export default function App() {
       setActiveNoteId(null);
     }
   }
+
+  const normalizedSearchTerm = searchTerm.toLowerCase();
+  const filteredNotes = notes.filter((note) => {
+    return (
+      note.title.toLowerCase().includes(normalizedSearchTerm) ||
+      note.content.toLowerCase().includes(normalizedSearchTerm)
+    );
+  });
+
   const previewHtml = marked(activeNote?.content || "");
 
   return (
@@ -99,23 +110,33 @@ export default function App() {
           <button className="new-note-button" onClick={handleCreateNote}>
             + New Note
           </button>
+          <input
+            className="search-input"
+            type="text"
+            placeholder="Search notes..."
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+          />
+          {filteredNotes.length > 0 ? (
+            filteredNotes.map((note) => {
+              const isActive = note.id === activeNoteId;
 
-          {notes.map((note) => {
-            const isActive = note.id === activeNoteId;
-
-            return (
-              <article
-                key={note.id}
-                className={isActive ? "note-card active" : "note-card"}
-                onClick={() => setActiveNoteId(note.id)}
-              >
-                <h3 className="note-title">{note.title}</h3>
-                <p className="note-excerpt">
-                  {note.content || "No content yet."}
-                </p>
-              </article>
-            );
-          })}
+              return (
+                <article
+                  key={note.id}
+                  className={isActive ? "note-card active" : "note-card"}
+                  onClick={() => setActiveNoteId(note.id)}
+                >
+                  <h3 className="note-title">{note.title}</h3>
+                  <p className="note-excerpt">
+                    {note.content || "No content yet."}
+                  </p>
+                </article>
+              );
+            })
+          ) : (
+            <div className="empty-message">No notes match your search.</div>
+          )}
         </div>
       </aside>
 
