@@ -28,7 +28,8 @@ body {
   border-right: none;
 }
 
-.sidebar-header {
+.sidebar-header,
+.editor-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -41,17 +42,24 @@ body {
   font-size: 24px;
 }
 
-.new-note-button {
+.new-note-button,
+.delete-note-button {
   border: 1px solid #dcdcdc;
   background-color: #ffffff;
-  padding: 12px;
+  padding: 10px 14px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
 }
 
-.new-note-button:hover {
+.new-note-button:hover,
+.delete-note-button:hover {
   background-color: #f1f1f1;
+}
+
+.delete-note-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .section-box {

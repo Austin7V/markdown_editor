@@ -29,7 +29,7 @@ const notes: Note[] = [
 
 export default function App() {
   const [readyNotes, setNotes] = useState(notes);
-  const [activeNoteId, setActiveNoteId] = useState(notes[0].id);
+  const [activeNoteId, setActiveNoteId] = useState<number | null>(notes[0].id);
 
   const activeNote = notes.find((note) => note.id === activeNoteId);
 
@@ -77,6 +77,18 @@ export default function App() {
     setActiveNoteId(newNote.id);
   }
 
+  function handleDeleteNote() {
+    if (activeNoteId === null) {
+      return;
+    }
+    const updatedNotes = notes.filter((note) => note.id! === activeNoteId);
+    setNotes(updatedNotes);
+    if (updatedNotes.length > 0) {
+      setActiveNoteId(updatedNotes[0].id);
+    } else {
+      setActiveNoteId(null);
+    }
+  }
   const previewHtml = marked(activeNote?.content || "");
 
   return (
@@ -110,6 +122,13 @@ export default function App() {
       <main className="editor">
         <h2 className="section-title">Editor</h2>
         <div className="section-box">
+          <button
+            className="delete-note-button"
+            onClick={handleDeleteNote}
+            disabled={activeNoteId === null}
+          >
+            Delete
+          </button>
           <input
             className="note-input"
             type="text"
